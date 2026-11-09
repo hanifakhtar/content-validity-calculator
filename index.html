@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#163b56">
+  <meta name="description" content="Kalkulator validitas isi: I-CVI, S-CVI, modified kappa, dan Aiken's V, tanpa perlu server.">
+  <title>Content Validity Calculator | CVI, Kappa & Aiken's V</title>
+  <style>
+:root{--ink:#18354e;--dark:#102f49;--blue:#1e5879;--teal:#16768a;--muted:#637789;--line:#dce5ec;--paper:#fff;--bg:#f5f8fa;--input:#f0f5f8;--shadow:0 6px 20px rgba(26,58,82,.045)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,"Helvetica Neue",Arial,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:var(--blue)}a:hover{color:var(--teal)}[hidden]{display:none!important}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #7dd3e1;outline-offset:2px}
+.topbar{background:#12364f;border-bottom:1px solid rgba(255,255,255,.12);position:relative;z-index:5}.topbar-inner{max-width:1450px;margin:auto;padding:0 32px;min-height:70px;display:flex;align-items:center;justify-content:space-between;gap:22px}.brand{color:#fff;text-decoration:none;display:flex;gap:12px;align-items:center;font-size:17px;font-weight:450;letter-spacing:-.3px;white-space:nowrap}.brand:hover{color:#fff}.brand strong{font-weight:750}.brand-symbol{width:34px;height:34px;border:1px solid #5eb6bf;border-radius:10px;color:#fff;background:#235974;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:800}.brand-dot{color:#71d0c9}.topnav{align-self:stretch;display:flex;gap:10px}.nav-link{border:0;background:transparent;color:#c3d8e4;padding:0 17px;font-weight:650;font-size:13px;border-bottom:3px solid transparent}.nav-link:hover{color:white}.nav-link.active{color:white;border-bottom-color:#6ce0d3}
+.page-wrap{max-width:1450px;margin:auto;padding:30px 32px 48px}.hero{background:linear-gradient(115deg,#173e5a 0%,#225a77 63%,#287a88 100%);border-radius:16px;color:white;min-height:211px;padding:30px 38px 27px;margin-bottom:22px;box-shadow:0 12px 25px rgba(20,65,90,.1);position:relative;overflow:hidden}.hero:after{content:"";position:absolute;width:340px;height:340px;border-radius:50%;border:55px solid rgba(255,255,255,.035);right:-80px;top:-140px;pointer-events:none}.eyebrow{font-size:11px;letter-spacing:2px;font-weight:800;color:#c2e8e5;display:flex;align-items:center;gap:9px}.eyebrow-dot{height:7px;width:7px;border-radius:50%;background:#69e0ce}.version{border:1px solid rgba(255,255,255,.28);letter-spacing:1px;padding:2px 7px;border-radius:5px;font-size:9px}.hero h1{font-size:clamp(27px,3.2vw,39px);letter-spacing:-1.1px;line-height:1.2;margin:12px 0 9px;font-weight:780;color:#fff}.hero h1 span{color:#9de8d9}.hero p{max-width:800px;line-height:1.65;margin:0;color:#e1f0f4;font-size:14px}.hero-features{margin-top:20px;display:flex;flex-wrap:wrap;gap:10px 25px;color:#d1ebed;font-size:12px;font-weight:550}
+.workspace{display:grid;grid-template-columns:330px minmax(0,1fr);align-items:start;gap:22px}.sidebar,.main-column{min-width:0}.panel{background:var(--paper);border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow);padding:23px;margin-bottom:19px}.input-panel{background:#f0f4f7;border-color:#d5e0e7}.panel h2{font-size:18px;line-height:1.4;letter-spacing:-.35px;margin:3px 0 16px;color:#1b3e57}.section-label{font-size:11px;letter-spacing:1.6px;color:#4a8196;font-weight:850}.input-panel .section-label{color:#5e7f92}.source-picker{background:#dfe8ee;display:flex;padding:4px;border-radius:8px;gap:3px;margin-bottom:17px}.source-btn{width:50%;background:transparent;border:0;border-radius:6px;padding:9px 6px;color:#607385;font-weight:700;font-size:12px}.source-btn.active{background:white;box-shadow:0 1px 5px #92a9b244;color:#18516b}.upload-area{border:1.5px dashed #adc7d4;border-radius:10px;background:#f9fcfd;display:flex;align-items:center;flex-direction:column;padding:19px 10px 16px;cursor:pointer;color:#46657c;text-align:center;transition:background .2s,border-color .2s}.upload-area:hover,.upload-area.drag-over{border-color:#21808c;background:#e8f9f9}.upload-area strong{font-size:13px;color:#2b5067}.upload-area span:not(.upload-icon){font-size:12px;color:#738594}.upload-area small{margin-top:5px;font-size:11px;color:#8496a4}.upload-icon{font-size:22px;color:#1d7790;font-weight:750;line-height:1;margin:1px 0 11px;border:1px solid #c2dfe8;border-radius:50%;height:35px;width:35px;display:grid;place-items:center}.file-name{font-size:12px;color:#236a75;overflow-wrap:anywhere;margin:8px 0 0}.file-name:empty{display:none}.helper{font-size:12px;color:#687f90;line-height:1.6;margin:12px 0 16px}.helper code{background:#e1ebf0;padding:1px 3px;border-radius:3px}.button{border:1px solid transparent;border-radius:8px;font-weight:720;padding:10px 15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;line-height:1.35;transition:filter .12s,transform .12s,background .12s;white-space:normal;text-align:center}.button:hover{filter:brightness(.97);transform:translateY(-1px)}.button:active{transform:translateY(0)}.button-block{display:flex;width:100%}.button-soft{background:#e0eaef;border-color:#cfdee6;color:#28536c}.button-outline{background:transparent;color:#385f78;border-color:#bed0db;margin-top:11px}.button-primary{background:#256783;color:white;border-color:#256783}.button-primary:hover{background:#1f5871}.button-analyze{margin-top:18px;font-size:14px;padding:12px 12px;justify-content:space-between}.button-success{background:#16774e;color:white;border-color:#16774e}.button-small{font-size:12px;padding:7px 11px}.input-panel label:not(.upload-area){display:block;font-size:12px;font-weight:750;color:#3d596e;margin-bottom:13px}.input-panel label input,.input-panel label select{width:100%;margin-top:5px;background:#fff;border:1px solid #cbd9e1;border-radius:7px;padding:9px 10px;color:#23435b;min-width:0;height:40px}.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.mini-note{padding:11px 12px;border-left:3px solid #8bb9c6;background:#e5eff2;font-size:11.5px;line-height:1.6;color:#536d80;border-radius:4px;margin-top:2px}
+.empty-card{border:1px dashed #c2d3dd;background:#fff;min-height:320px;border-radius:12px;display:flex;justify-content:center;align-items:center;flex-direction:column;text-align:center;padding:35px;color:#667f90}.empty-card h2{color:#294c65;margin:10px 0 5px;font-size:19px}.empty-card p{margin:0;max-width:380px}.empty-icon{font-size:37px;color:#6cabc0;background:#f1f8fa;width:78px;height:78px;display:grid;place-items:center;border-radius:50%}.status-card{border:1px solid #bcdcc8;background:#edf8f0;border-radius:12px;padding:16px 19px;margin-bottom:16px}.status-card.warning{background:#fff9ec;border-color:#ead6a5}.status-card.error{background:#fff0ee;border-color:#ebc2c0}.status-head{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:770;color:#20553b}.status-card.warning .status-head{color:#846019}.status-card.error .status-head{color:#953d3c}.status-meta{font-size:12px;color:#53687a;margin-top:3px}.issue-list{font-size:12px;line-height:1.7;margin:10px 0 0 17px;padding:0;color:#5c5360}.status-card.error .issue-list{color:#78403f}.issue-more{color:#647587;font-size:12px;margin-top:7px}.editor-panel{padding-bottom:18px}.panel-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:16px;flex-wrap:wrap}.panel-heading h2{margin:1px 0 4px}.panel-heading p{font-size:12px;color:#748594;margin:0}.table-actions{display:flex;gap:7px;flex-wrap:wrap}.sheet-container{overflow:auto;max-height:470px;border:1px solid #cbdce5;border-radius:8px;background:white}.data-sheet{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;white-space:nowrap}.data-sheet th{background:#eaf1f5;top:0;position:sticky;z-index:2;border-bottom:1px solid #cadce7;text-align:left;font-weight:700}.data-sheet td,.data-sheet th{border-right:1px solid #e5edf2;border-bottom:1px solid #e5edf2;padding:0;height:38px}.data-sheet th:first-child{min-width:70px}.data-sheet th:nth-child(2){min-width:190px}.data-sheet th:not(:nth-child(-n+2)){min-width:95px}.data-sheet input{width:100%;height:36px;min-width:70px;border:none;background:transparent;padding:8px 9px;outline:none;color:#203f55}.data-sheet input:focus{background:#e6f7f7;box-shadow:inset 0 0 0 2px #59aeb7}.data-sheet .meta-input{min-width:140px}.data-sheet tbody tr:nth-child(even){background:#f8fbfd}.data-sheet .row-label{padding:0 12px;color:#8495a2;font-weight:700;text-align:center;font-size:11px}.data-sheet .expert-name{font-size:11px;font-weight:760;width:100%;background:transparent;border:0;padding:11px 7px;color:#244a61}.data-sheet .expert-name:focus{outline:2px solid #80cbcf;outline-offset:-2px}.small-hint{font-size:12px;margin-top:11px;color:#7b8b97}
+.result-divider{height:1px;background:#cddbe4;margin:0 0 20px}.output-heading{background:#eaf2f7;border:1px solid #d5e4ec;border-left:4px solid #2a7994;border-radius:10px;padding:17px 19px;margin-bottom:15px}.output-heading h2{font-size:23px;margin:5px 0 3px}.output-heading p{color:#667a8a;font-size:12px;margin:0}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 17px}.metric{border:1px solid var(--line);background:white;border-radius:11px;padding:14px 14px 12px;border-top:3px solid #2b8392;min-width:0}.metric-label{font-size:11px;color:#738696;font-weight:730}.metric-value{font-size:27px;line-height:1.2;font-weight:790;letter-spacing:-.6px;color:#183f5c;margin:7px 0 4px}.metric-sub{font-size:11px;color:#7b8d98}.result-panel h2{margin:0 0 10px}.result-panel .panel-heading{margin-bottom:15px}.result-panel .panel-heading h2{margin:0 0 4px}.scroll-table{overflow-x:auto;border:1px solid #e0e9ee;border-radius:8px}.result-table{border-collapse:collapse;width:100%;font-size:12px;background:white}.result-table th{background:#edf3f6;color:#305b74;text-align:left;font-size:11px;letter-spacing:.1px;font-weight:800;white-space:nowrap}.result-table th,.result-table td{padding:11px 12px;border-bottom:1px solid #e7edf1;vertical-align:middle}.result-table tbody tr:last-child td{border-bottom:0}.result-table tbody tr:hover{background:#f7fbfd}.result-table td{white-space:nowrap}.result-table td.wrap-text{white-space:normal;min-width:140px;max-width:300px}.result-table td.status-cell{font-weight:750;font-size:11px}.status-pill{display:inline-block;padding:3px 7px;border-radius:5px}.status-pill.green{color:#157046;background:#e0f4e9}.status-pill.red{color:#a64a43;background:#ffeded}.status-pill.amber{color:#8b6a14;background:#fff5d8}.status-pill.blue{color:#27617c;background:#e6f3f8}.subtle-note{background:#f6f9fb;border:1px solid #e6edf1;padding:10px 12px;font-size:12px;color:#647b8c;border-radius:7px;line-height:1.65;margin-top:12px}.table-toolbar{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.searchbox{position:relative}.searchbox span{position:absolute;left:11px;top:6px;color:#78909f;font-size:20px}.searchbox input{padding:9px 10px 9px 30px;border:1px solid #d4e2e8;border-radius:7px;width:180px;background:white;font-size:12px}.table-toolbar select,.language-picker select{background:white;border:1px solid #d5e2e9;padding:9px 8px;border-radius:7px;color:#355772;font-size:12px}.pagination{margin-top:11px;display:flex;justify-content:space-between;align-items:center;gap:8px;color:#718695;font-size:12px;flex-wrap:wrap}.page-btns{display:flex;align-items:center;gap:7px}.page-btns button{border:1px solid #d3e2e8;background:#f6fafb;border-radius:6px;padding:5px 9px;color:#2f586e}.page-btns button:disabled{opacity:.4;cursor:default}.details-panel{padding:0;overflow:hidden}.details-panel>summary{list-style:none;cursor:pointer;padding:17px 23px;font-size:14px;font-weight:800;color:#28506c;display:flex;justify-content:space-between}.details-panel>summary::-webkit-details-marker{display:none}.details-panel[open]>summary{border-bottom:1px solid #e3ebf0}.details-panel>.helper{margin:15px 21px}.details-panel>.scroll-table{margin:0 18px 18px}.interpretation{margin:0;color:#445e71;line-height:1.8;font-size:13px}.report-label{display:block;font-size:12px;color:#35546a;font-weight:740;margin:10px 0 7px}.report-box{min-height:146px;width:100%;resize:vertical;border:1px solid #d2e0e7;border-radius:7px;background:#f8fbfd;padding:12px;color:#3d5568;font-size:12.5px;line-height:1.7}.copy-btn{margin-top:7px}.report-rule{border-top:1px solid #e2ebf0;margin:19px 0}.language-picker{font-size:11px;color:#648092;font-weight:800;display:flex;align-items:center;gap:8px}.download-panel{border:1px solid #cadddf;background:linear-gradient(115deg,#f3f9f8,#edf5f6);padding:19px 22px;border-radius:12px;display:flex;gap:20px;justify-content:space-between;align-items:center;flex-wrap:wrap}.download-panel strong{font-size:15px;color:#285e5e}.download-panel p{font-size:12px;color:#607d83;margin:4px 0 0;max-width:480px}.download-actions{display:flex;gap:8px;flex-wrap:wrap}.download-actions .button{font-size:12px}
+.reading-page{max-width:1000px}.page-intro{padding:20px 0 24px}.page-intro h1{font-size:32px;letter-spacing:-.7px;margin:6px 0}.page-intro p{color:var(--muted);margin:0}.article-panel{padding:30px 35px;font-size:14px;line-height:1.85}.article-panel h2{font-size:20px;color:#244b64;margin:25px 0 7px}.article-panel h2:first-child{margin-top:0}.article-panel p{margin:9px 0 15px;color:#455e72}.info-note{background:#fff9eb;border-left:4px solid #d5a63f;padding:14px 18px;border-radius:8px;margin:25px 0}.info-note p{margin:5px 0 0}.reference-list{padding-left:23px}.reference-list li{padding:13px 0;border-bottom:1px solid #e6edf0;overflow-wrap:anywhere}.reference-list li:last-child{border:0}.reference-list a{display:block;font-size:12px;margin-top:4px}.site-footer{text-align:center;color:#8a9ba7;font-size:11px;padding:15px 20px 33px}.footer-separator{margin:0 8px;color:#b5c2cd}.toast{position:fixed;bottom:22px;right:24px;z-index:20;background:#164e69;color:white;padding:11px 16px;border-radius:9px;box-shadow:0 10px 25px rgba(0,0,0,.15);max-width:90vw;font-size:13px}
+@media(max-width:1100px){.workspace{grid-template-columns:295px minmax(0,1fr)}.metrics{grid-template-columns:repeat(2,1fr)}.download-panel{align-items:flex-start}}@media(max-width:760px){.topbar-inner{padding:12px 16px;display:block}.brand{margin-bottom:10px}.topnav{gap:0;overflow-x:auto}.nav-link{padding:9px 12px;font-size:11px;white-space:nowrap}.page-wrap{padding:15px 13px 25px}.hero{padding:22px 20px;min-height:0}.hero h1{font-size:29px}.hero-features{gap:9px 13px}.workspace{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:1fr 1fr;gap:12px}.sidebar .panel{margin-bottom:6px}.panel{padding:18px}.metrics{gap:9px}.metric{padding:11px}.metric-value{font-size:23px}.article-panel{padding:23px 20px}.details-panel{padding:0}.download-panel{padding:16px}.download-actions{width:100%}}@media(max-width:560px){.sidebar{display:block}.sidebar .panel{margin-bottom:15px}.panel-heading{display:block}.table-actions,.table-toolbar{margin-top:11px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.download-actions .button{width:100%}.download-actions{display:grid}.hero-features{font-size:11px}.eyebrow{font-size:10px}.site-footer{line-height:1.7}}
+
+</style>
+
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#analisis" aria-label="Content Validity Calculator, beranda"><span class="brand-symbol">V<span class="brand-dot">.</span></span><span>Content Validity <strong>Calculator</strong></span></a>
+      <nav class="topnav" aria-label="Navigasi utama">
+        <button class="nav-link active" data-tab="analisis" type="button">Analisis</button>
+        <button class="nav-link" data-tab="petunjuk" type="button">Petunjuk & Interpretasi</button>
+        <button class="nav-link" data-tab="referensi" type="button">Referensi</button>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section id="tab-analisis" class="tab-page page-wrap">
+      <section class="hero">
+        <div class="eyebrow"><span class="eyebrow-dot"></span> PSYCHOMETRICS TOOLS <span class="version">WEB EDITION</span></div>
+        <h1>Content Validity <span>Calculator</span></h1>
+        <p>Hitung I-CVI, modified kappa, S-CVI, dan Aiken’s V dari penilaian ahli, dengan dasar keputusan transparan dan laporan siap digunakan.</p>
+        <div class="hero-features"><span>✓ Perhitungan di browser</span><span>✓ Input & ekspor Excel</span><span>✓ Tanpa login atau server</span></div>
+      </section>
+
+      <div class="workspace">
+        <aside class="sidebar">
+          <section class="panel input-panel">
+            <div class="section-label">01 / DATA INPUT</div>
+            <h2>Masukkan data</h2>
+            <div class="source-picker" role="group" aria-label="Cara memasukkan data">
+              <button type="button" id="source-upload" class="source-btn active" aria-pressed="true">Unggah file</button>
+              <button type="button" id="source-manual" class="source-btn" aria-pressed="false">Input manual</button>
+            </div>
+            <div id="upload-options">
+              <label class="upload-area" for="file-input" id="drop-zone">
+                <span class="upload-icon" aria-hidden="true">↑</span>
+                <strong>Klik untuk memilih file</strong>
+                <span>atau seret file ke area ini</span>
+                <small>Excel .xlsx atau CSV / TSV</small>
+                <input type="file" id="file-input" accept=".xlsx,.csv,.tsv,.xls" hidden>
+              </label>
+              <div id="file-name" class="file-name" aria-live="polite"></div>
+              <button id="download-template" type="button" class="button button-soft button-block">↓ Download template Excel</button>
+              <p class="helper">Gunakan <strong>sheet pertama</strong>. Dua kolom awal: <code>Item</code> dan <code>Item_Text</code>. Semua kolom berikutnya adalah rating ahli.</p>
+            </div>
+            <div id="manual-options" hidden>
+              <div class="input-grid">
+                <label>Jumlah item <input id="n-items" type="number" min="1" max="300" step="1" value="8"></label>
+                <label>Jumlah ahli <input id="n-experts" type="number" min="1" max="50" step="1" value="5"></label>
+              </div>
+              <button id="build-manual" type="button" class="button button-soft button-block">Buat / reset tabel</button>
+              <p class="helper">Ubah nilai langsung di dalam sel tabel. Tabel dapat digulir secara horizontal.</p>
+            </div>
+            <button id="load-example" class="button button-outline button-block" type="button">✧ Muat data contoh</button>
+          </section>
+
+          <section class="panel input-panel settings-panel">
+            <div class="section-label">02 / PENGATURAN</div>
+            <h2>Parameter analisis</h2>
+            <div class="input-grid">
+              <label>Skor minimum <input id="min-score" type="number" value="1" step="1"></label>
+              <label>Skor maksimum <input id="max-score" type="number" value="4" step="1"></label>
+            </div>
+            <label>Rating dianggap relevan (≥) <input id="cvi-cutoff" type="number" value="3" step="1"></label>
+            <label>Confidence interval Aiken’s V
+              <select id="conf"><option value="0.90">90%</option><option value="0.95" selected>95%</option><option value="0.99">99%</option></select>
+            </label>
+            <label>Alpha untuk p-value Aiken
+              <select id="alpha"><option value="0.10">0,10</option><option value="0.05" selected>0,05</option><option value="0.01">0,01</option></select>
+            </label>
+            <div class="mini-note">Default CVI klasik: relevansi dinilai pada skala 1–4 dan rating 3–4 digolongkan relevan. Jika diubah, keputusan mengikuti parameter pengguna.</div>
+            <button id="analyze" type="button" class="button button-primary button-block button-analyze">Hitung validitas <span aria-hidden="true">→</span></button>
+          </section>
+        </aside>
+
+        <div class="main-column">
+          <section id="editor-section" class="panel editor-panel" hidden>
+            <div class="panel-heading"><div><div class="section-label">DATASET</div><h2>Editor rating ahli</h2><p>Edit ID item, teks item, dan skor masing-masing ahli.</p></div><div class="table-actions"><button type="button" class="button button-small button-soft" id="add-item">+ Item</button><button type="button" class="button button-small button-soft" id="add-expert">+ Ahli</button></div></div>
+            <div class="sheet-container"><table id="manual-table" class="data-sheet"><thead></thead><tbody></tbody></table></div>
+            <div class="small-hint">Perubahan pada tabel otomatis diperiksa. Klik <b>Hitung validitas</b> setelah selesai.</div>
+          </section>
+          <section id="data-status" class="empty-card" aria-live="polite"><span class="empty-icon">▦</span><h2>Belum ada data</h2><p>Upload template Excel atau pilih Input manual, lalu klik <strong>Hitung validitas</strong>.</p></section>
+          <section id="results" hidden>
+            <div class="result-divider"></div>
+            <div class="output-heading"><div class="section-label">03 / HASIL ANALISIS</div><h2>Hasil analisis</h2><p>Ringkasan skala dan hasil per item. Semua indeks dan parameter dapat diekspor ke Excel.</p></div>
+            <div class="metrics" id="metrics"></div>
+            <section class="panel result-panel"><div class="panel-heading"><div><h2>Ringkasan skala</h2><p>S-CVI/Ave adalah indeks utama; S-CVI/UA merupakan indeks tambahan.</p></div></div><div class="scroll-table"><table class="result-table" id="scale-table"></table></div><div class="subtle-note" id="scale-notes"></div></section>
+            <section class="panel result-panel"><div class="panel-heading"><div><h2>Hasil per item</h2><p>I-CVI, kappa, Aiken’s V, confidence interval dan right-tail p-value.</p></div><div class="table-toolbar"><label class="searchbox"><span>⌕</span><input type="search" id="item-search" placeholder="Cari item..." aria-label="Cari item hasil"></label><select id="page-size" aria-label="Jumlah baris per halaman"><option value="10">10 baris</option><option value="25">25 baris</option><option value="50">50 baris</option><option value="100">100 baris</option></select></div></div><div class="scroll-table"><table class="result-table item-table" id="item-table"></table></div><div id="pagination" class="pagination"></div><div class="subtle-note">I-CVI ≥ 0,78 dengan minimal 3 ahli digunakan untuk label item. Nilai p Aiken bersifat informasi inferensial pendukung, bukan cutoff universal validitas.</div></section>
+            <details class="panel details-panel"><summary>Statistik lanjutan per item <span class="disclosure-icon">⌄</span></summary><p class="helper">Missing rating, probabilitas peluang (Pc), universal agreement dan metode p-value Aiken.</p><div class="scroll-table"><table class="result-table" id="advanced-table"></table></div></details>
+            <section class="panel result-panel"><h2>Interpretasi berbasis aturan</h2><p id="interpretation" class="interpretation"></p></section>
+            <section class="panel result-panel"><div class="panel-heading"><div><h2>Draft Methods & Results</h2><p>Draf otomatis dapat disalin dan disesuaikan dengan konteks penelitian.</p></div><label class="language-picker">Bahasa <select id="report-language"><option value="id">Indonesia</option><option value="en">English</option></select></label></div><label for="methods-text" id="methods-label" class="report-label">Metode (Bahasa Indonesia)</label><textarea id="methods-text" class="report-box" readonly></textarea><button type="button" class="button button-small button-soft copy-btn" data-copy="methods-text">Salin metode</button><div class="report-rule"></div><label for="results-text" id="results-label" class="report-label">Hasil (Bahasa Indonesia)</label><textarea id="results-text" class="report-box" readonly></textarea><button type="button" class="button button-small button-soft copy-btn" data-copy="results-text">Salin hasil</button></section>
+            <details class="panel details-panel"><summary>Kriteria & dasar referensi <span class="disclosure-icon">⌄</span></summary><div class="scroll-table"><table class="result-table" id="criteria-table"></table></div></details>
+            <div class="download-panel"><div><strong>Hasil siap diekspor</strong><p>Excel berisi indeks item, ringkasan skala, tabel publikasi, draft laporan, pemeriksaan data, data input, serta referensi.</p></div><div class="download-actions"><button type="button" id="download-csv" class="button button-soft">↓ CSV hasil item</button><button type="button" id="download-results" class="button button-success">↓ Download Excel lengkap</button></div></div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-petunjuk" class="tab-page page-wrap reading-page" hidden>
+      <div class="page-intro"><span class="section-label">PANDUAN</span><h1>Petunjuk & Interpretasi</h1><p>Memahami setiap indeks validitas isi dan batasan interpretasinya.</p></div>
+      <div class="panel article-panel"><h2>1. I-CVI dan modified kappa</h2><p><strong>I-CVI</strong> adalah proporsi ahli yang menilai suatu item relevan. Pada pengaturan standar 1–4, skor 3 atau 4 dikategorikan relevan. Aplikasi memakai I-CVI ≥ 0,78 dengan sedikitnya 3 ahli sebagai kriteria keputusan (Polit, Beck, & Owen, 2007).</p><p><strong>Modified kappa (k*)</strong> mengoreksi proporsi kesepakatan terhadap peluang kesepakatan kebetulan. Kategori yang dipakai: Fair (0,40–0,59), Good (0,60–0,74), Excellent (&gt; 0,74); nilai &lt; 0,40 diberi label deskriptif di bawah Fair.</p><h2>2. Scale-level CVI</h2><p><strong>S-CVI/Ave</strong> adalah rerata I-CVI antar-item, dengan kriteria utama ≥ 0,90 (Polit & Beck, 2006). <strong>S-CVI/UA</strong> adalah proporsi item yang memperoleh kesepakatan universal, ditampilkan sebagai indeks tambahan karena sensitif terhadap banyaknya ahli.</p><p>Jika ada rating kosong, I-CVI dan Aiken’s V dihitung dari rating yang tersedia, sedangkan universal agreement item tersebut tidak dievaluasi.</p><h2>3. Aiken’s V</h2><p><strong>Aiken’s V</strong> berada pada rentang 0–1. Semakin besar V, semakin dekat rata-rata rating ahli dengan skor maksimum. Confidence interval dihitung dengan score method Penfield & Giacobbi (2004). Tidak ada cutoff V atau batas bawah CI universal yang diterapkan.</p><p><strong>Right-tail p-value</strong> menurut Aiken (1985) dihitung secara exact untuk jumlah ahli ≤ 25 dan menggunakan pendekatan normal untuk lebih dari 25 ahli. P-value bukan label item valid atau tidak valid.</p><div class="info-note"><strong>Catatan metodologis</strong><p>Indeks kuantitatif hanya merupakan salah satu sumber bukti validitas isi. Pertimbangkan pula definisi konstruk, cakupan domain, komentar kualitatif ahli, dan bukti validitas lain.</p></div><h2>4. Impor dan ekspor file</h2><p>Unggah file <code>.xlsx</code>, <code>.csv</code>, atau <code>.tsv</code>. Dua kolom pertama berisi kode item dan teks item, sedangkan kolom ketiga dan seterusnya berisi skor ahli. File Excel .xls lama perlu disimpan ulang sebagai .xlsx. Data dihitung lokal di browser dan tidak dikirim ke server.</p></div>
+    </section>
+
+    <section id="tab-referensi" class="tab-page page-wrap reading-page" hidden>
+      <div class="page-intro"><span class="section-label">LANDASAN ILMIAH</span><h1>Referensi</h1><p>Rujukan untuk formula, confidence interval, dan interpretasi indeks.</p></div><div class="panel article-panel"><ol class="reference-list" id="reference-list"></ol></div>
+    </section>
+  </main>
+  <footer class="site-footer">Content Validity Calculator <span class="footer-separator">·</span> Browser-based psychometrics toolkit <span class="footer-separator">·</span> Data tetap di perangkat Anda</footer>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<script>
+/*
+ * Minimal, dependency-free XLSX reader/writer for this static app.
+ * Supports standard .xlsx (ZIP storage/deflate; first worksheet), numeric,
+ * shared-string, inline-string, boolean, and cached-formula cell values.
+ * XLSX output uses uncompressed ZIP entries for universal compatibility.
+ * This is not a general spreadsheet engine; macros and .xls are unsupported.
+ */
+(function(global){
+  'use strict';
+  const te=new TextEncoder(),td=new TextDecoder('utf-8');
+  const tag=(el,name)=>Array.from(el.getElementsByTagNameNS('*',name));
+  const first=(el,name)=>tag(el,name)[0]||null;
+  const xmlText=(s)=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;').replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g,'');
+  const parseXml=(xml)=>{
+    const doc=new DOMParser().parseFromString(xml,'application/xml');
+    if(doc.getElementsByTagName('parsererror').length)throw new Error('Format XML di dalam Excel tidak valid.');
+    return doc;
+  };
+  function colNumber(ref){let n=0;for(const c of (ref.match(/^[A-Z]+/i)||[''])[0].toUpperCase())n=n*26+c.charCodeAt(0)-64;return n-1;}
+  function colLabel(index){let s='';for(let i=index+1;i>0;i=Math.floor((i-1)/26))s=String.fromCharCode(65+(i-1)%26)+s;return s;}
+  function zipDirectory(buf){
+    const view=new DataView(buf),bytes=new Uint8Array(buf);
+    let eocd=-1;for(let i=buf.byteLength-22;i>=Math.max(0,buf.byteLength-65557);i--){if(view.getUint32(i,true)===0x06054b50){eocd=i;break;}}
+    if(eocd<0)throw new Error('File bukan ZIP/XLSX yang valid.');
+    const count=view.getUint16(eocd+10,true),offset=view.getUint32(eocd+16,true),entries=new Map();
+    if(count>5000)throw new Error('File Excel terlalu kompleks.');
+    let pos=offset;
+    for(let i=0;i<count;i++){
+      if(pos+46>buf.byteLength||view.getUint32(pos,true)!==0x02014b50)throw new Error('Struktur file Excel rusak.');
+      const method=view.getUint16(pos+10,true),compSize=view.getUint32(pos+20,true),uncompSize=view.getUint32(pos+24,true);
+      const nameLen=view.getUint16(pos+28,true),extraLen=view.getUint16(pos+30,true),commentLen=view.getUint16(pos+32,true),local=view.getUint32(pos+42,true);
+      const name=td.decode(bytes.slice(pos+46,pos+46+nameLen));
+      entries.set(name,{method,compSize,uncompSize,local});pos+=46+nameLen+extraLen+commentLen;
+    }
+    return {view,bytes,entries};
+  }
+  async function readEntry(zip,name){
+    const e=zip.entries.get(name);if(!e)throw new Error('Bagian Excel tidak ditemukan: '+name);
+    if(e.uncompSize>60*1024*1024)throw new Error('Sheet Excel terlalu besar.');
+    const {view,bytes}=zip;
+    if(view.getUint32(e.local,true)!==0x04034b50)throw new Error('Entry ZIP tidak valid.');
+    const ofs=e.local+30+view.getUint16(e.local+26,true)+view.getUint16(e.local+28,true);
+    const data=bytes.slice(ofs,ofs+e.compSize);
+    if(e.method===0)return td.decode(data);
+    if(e.method!==8)throw new Error('Metode kompresi Excel tidak didukung.');
+    if(typeof DecompressionStream==='undefined')throw new Error('Browser tidak mendukung pembacaan XLSX ini. Gunakan Chrome versi terbaru atau impor CSV.');
+    let stream;
+    try{stream=new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'));}
+    catch(_){throw new Error('Browser tidak dapat mendekompresi file. Gunakan CSV.');}
+    try{return td.decode(await new Response(stream).arrayBuffer());}
+    catch(_){throw new Error('File Excel tidak dapat diekstrak.');}
+  }
+  function normalizePath(base,target){
+    let segments=(target.startsWith('/')?target.slice(1):base+'/'+target).split('/'),stack=[];
+    for(const seg of segments){if(seg==='..')stack.pop();else if(seg&&seg!=='.')stack.push(seg);}
+    return stack.join('/');
+  }
+  async function readXlsx(file){
+    if(file.size>25*1024*1024)throw new Error('Ukuran file maksimal 25 MB.');
+    const zip=zipDirectory(await file.arrayBuffer());
+    const wb=parseXml(await readEntry(zip,'xl/workbook.xml'));
+    const sheet=first(wb,'sheet');if(!sheet)throw new Error('Workbook tidak memiliki sheet.');
+    const relId=sheet.getAttribute('r:id')||sheet.getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships','id');
+    let path='xl/worksheets/sheet1.xml';
+    if(relId&&zip.entries.has('xl/_rels/workbook.xml.rels')){
+      const rels=parseXml(await readEntry(zip,'xl/_rels/workbook.xml.rels'));
+      const rel=tag(rels,'Relationship').find(r=>r.getAttribute('Id')===relId);
+      if(rel)path=normalizePath('xl',rel.getAttribute('Target')||'worksheets/sheet1.xml');
+    }
+    if(!zip.entries.has(path)){
+      path=Array.from(zip.entries.keys()).find(n=>/^xl\/worksheets\/sheet\d+\.xml$/.test(n));
+      if(!path)throw new Error('Sheet pertama tidak ditemukan.');
+    }
+    let strings=[];
+    if(zip.entries.has('xl/sharedStrings.xml')){
+      const ss=parseXml(await readEntry(zip,'xl/sharedStrings.xml'));
+      strings=tag(ss,'si').map(si=>tag(si,'t').map(e=>e.textContent||'').join(''));
+    }
+    const sh=parseXml(await readEntry(zip,path)),rows=[];
+    for(const row of tag(sh,'row')){
+      let rownum=Number(row.getAttribute('r'));
+      if(!Number.isInteger(rownum)||rownum<=0)rownum=rows.length+1;
+      if(rownum>20000)throw new Error('Jumlah baris Excel melebihi batas impor.');
+      const arr=[];
+      for(const cell of Array.from(row.children).filter(c=>c.localName==='c')){
+        const c=colNumber(cell.getAttribute('r')||'A1');if(c<0||c>1000)continue;
+        const type=cell.getAttribute('t'),value=first(cell,'v');
+        let val='';
+        if(type==='inlineStr')val=tag(cell,'t').map(e=>e.textContent||'').join('');
+        else if(!value)val='';
+        else if(type==='s')val=strings[Number(value.textContent)]??'';
+        else if(type==='b')val=value.textContent==='1'?true:false;
+        else if(type==='e')val=value.textContent||'';
+        else if(type==='str')val=value.textContent||'';
+        else {const n=Number(value.textContent);val=Number.isFinite(n)?n:value.textContent;}
+        arr[c]=val;
+      }
+      if(arr.some(v=>v!==undefined&&v!==null&&String(v).trim()!==''))rows.push(arr);
+    }
+    if(!rows.length)throw new Error('Sheet pertama kosong.');
+    const headers=rows[0].map(v=>String(v??''));
+    const maxcol=Math.max(headers.length,...rows.slice(1).map(r=>r.length));
+    for(let i=0;i<maxcol;i++)headers[i]??='';
+    const data=rows.slice(1).map(r=>Array.from({length:maxcol},(_,i)=>r[i]??''));
+    return{headers,rows:data};
+  }
+  // CRC-32 for the ZIP store writer.
+  const crcTable=new Uint32Array(256);
+  for(let i=0;i<256;i++){let c=i;for(let j=0;j<8;j++)c=(c&1)?0xedb88320^(c>>>1):c>>>1;crcTable[i]=c>>>0;}
+  function crc32(buf){let c=0xffffffff;for(const b of buf)c=crcTable[(c^b)&255]^(c>>>8);return(c^0xffffffff)>>>0;}
+  function u16(n){return[n&255,(n>>>8)&255];}
+  function u32(n){return[n&255,(n>>>8)&255,(n>>>16)&255,(n>>>24)&255];}
+  function zipStore(files){
+    let local=[],central=[],offset=0;
+    const push=(arr,...a)=>arr.push(...a);
+    for(const [name,body] of files){
+      const n=te.encode(name),v=te.encode(body),crc=crc32(v);
+      const lh=new Uint8Array([80,75,3,4,...u16(20),...u16(0x800),...u16(0),...u16(0),...u16(0),...u32(crc),...u32(v.length),...u32(v.length),...u16(n.length),...u16(0)]);
+      local.push(lh,n,v);
+      const ch=new Uint8Array([80,75,1,2,...u16(20),...u16(20),...u16(0x800),...u16(0),...u16(0),...u16(0),...u32(crc),...u32(v.length),...u32(v.length),...u16(n.length),...u16(0),...u16(0),...u16(0),...u16(0),...u32(0),...u32(offset)]);
+      central.push(ch,n);offset+=lh.length+n.length+v.length;
+    }
+    const centralSize=central.reduce((a,v)=>a+v.length,0),count=files.length;
+    const end=new Uint8Array([80,75,5,6,...u16(0),...u16(0),...u16(count),...u16(count),...u32(centralSize),...u32(offset),...u16(0)]);
+    return new Blob([...local,...central,end],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  }
+  function sheetXml(headers,rows){
+    const lines=[];
+    function makeRow(row,r){
+      let cells='';
+      for(let c=0;c<row.length;c++){
+        const val=row[c];if(val===null||val===undefined||val==='')continue;
+        const ref=colLabel(c)+r;
+        if(typeof val==='number'&&Number.isFinite(val))cells+=`<c r="${ref}"><v>${val}</v></c>`;
+        else if(typeof val==='boolean')cells+=`<c r="${ref}" t="b"><v>${val?1:0}</v></c>`;
+        else cells+=`<c r="${ref}" t="inlineStr"><is><t xml:space="preserve">${xmlText(val)}</t></is></c>`;
+      }
+      return `<row r="${r}">${cells}</row>`;
+    }
+    lines.push(makeRow(headers,1));
+    for(let i=0;i<rows.length;i++)lines.push(makeRow(rows[i],i+2));
+    return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><sheetFormatPr defaultRowHeight="15"/><sheetData>${lines.join('')}</sheetData></worksheet>`;
+  }
+  function writeXlsx(sheets){
+    const workbook=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>${sheets.map((s,i)=>`<sheet name="${xmlText(s.name.slice(0,31))}" sheetId="${i+1}" r:id="rId${i+1}"/>`).join('')}</sheets></workbook>`;
+    const rels=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${sheets.map((_,i)=>`<Relationship Id="rId${i+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i+1}.xml"/>`).join('')}<Relationship Id="rId${sheets.length+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`;
+    const types=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>${sheets.map((_,i)=>`<Override PartName="/xl/worksheets/sheet${i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join('')}</Types>`;
+    const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="1"><font><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`;
+    const files=[['[Content_Types].xml',types],['_rels/.rels','<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'],['xl/workbook.xml',workbook],['xl/_rels/workbook.xml.rels',rels],['xl/styles.xml',styles]];
+    sheets.forEach((s,i)=>files.push([`xl/worksheets/sheet${i+1}.xml`,sheetXml(s.headers,s.rows)]));
+    return zipStore(files);
+  }
+  global.XLSXLite={readXlsx,writeXlsx};
+})(window);
+
+</script>
+<script>
+/* Static port of the supplied R Shiny Content Validity Calculator (2026). */
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const fmt=(n,d=3)=>Number.isFinite(n)?n.toFixed(d):'—';
+const fmtP=p=>!Number.isFinite(p)?'—':p<.001?'< .001':'= '+fmt(p);
+const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const mean=arr=>arr.reduce((a,b)=>a+b,0)/arr.length;
+const refData=[
+ ['Aiken, L. R. (1980). Content validity and reliability of single items or questionnaires. Educational and Psychological Measurement, 40, 955–959.','https://doi.org/10.1177/001316448004000419'],
+ ['Aiken, L. R. (1985). Three coefficients for analyzing the reliability and validity of ratings. Educational and Psychological Measurement, 45(1), 131–142.','https://doi.org/10.1177/0013164485451012'],
+ ['Lynn, M. R. (1986). Determination and quantification of content validity. Nursing Research, 35(6), 382–385.','https://pubmed.ncbi.nlm.nih.gov/3640358/'],
+ ['Polit, D. F., & Beck, C. T. (2006). The content validity index: Are you sure you know what\'s being reported? Research in Nursing & Health, 29(5), 489–497.','https://doi.org/10.1002/nur.20147'],
+ ['Polit, D. F., Beck, C. T., & Owen, S. V. (2007). Is the CVI an acceptable indicator of content validity? Research in Nursing & Health, 30(4), 459–467.','https://doi.org/10.1002/nur.20199'],
+ ['Penfield, R. D., & Giacobbi, P. R. Jr. (2004). Applying a score confidence interval to Aiken\'s item content-relevance index. Measurement in Physical Education and Exercise Science, 8(4), 213–225.','https://doi.org/10.1207/s15327841mpee0804_3'],
+ ['Merino Soto, C., & Livia Segovia, J. (2009). Confidence intervals for content validity: A Visual Basic computer program for Aiken\'s V. Anales de Psicología, 25(1), 169–171.','https://revistas.um.es/analesps/article/view/71631']
+];
+const example=()=>({headers:['Item','Item_Text','Expert_1','Expert_2','Expert_3','Expert_4','Expert_5'],rows:[
+ ['I1','Pernyataan contoh 1',4,4,3,4,4],['I2','Pernyataan contoh 2',4,3,4,4,3],['I3','Pernyataan contoh 3',3,3,4,3,4],['I4','Pernyataan contoh 4',3,2,3,3,3],
+ ['I5','Pernyataan contoh 5',4,4,4,4,4],['I6','Pernyataan contoh 6',4,4,3,4,4],['I7','Pernyataan contoh 7',3,3,4,4,3],['I8','Pernyataan contoh 8',4,4,4,4,4]]});
+function blankData(nItems,nExperts){return {headers:['Item','Item_Text',...Array.from({length:nExperts},(_,i)=>`Expert_${i+1}`)],rows:Array.from({length:nItems},(_,i)=>[`I${i+1}`,`Item ${i+1}`,...Array(nExperts).fill('')])};}
+const state={data:null,source:'upload',result:null,page:0,pageSize:10,search:'',toastTimer:null};
+function toast(message){const el=$('toast');el.textContent=message;el.hidden=false;clearTimeout(state.toastTimer);state.toastTimer=setTimeout(()=>el.hidden=true,4000);}
+function currentSettings(){return{min:Number($('min-score').value),max:Number($('max-score').value),cutoff:Number($('cvi-cutoff').value),conf:Number($('conf').value),alpha:Number($('alpha').value)};}
+function sourceMode(mode){
+ state.source=mode;$('source-upload').classList.toggle('active',mode==='upload');$('source-manual').classList.toggle('active',mode==='manual');
+ $('source-upload').setAttribute('aria-pressed',mode==='upload');$('source-manual').setAttribute('aria-pressed',mode==='manual');
+ $('upload-options').hidden=mode!=='upload';$('manual-options').hidden=mode!=='manual';
+ if(mode==='manual'&&!state.data){state.data=blankData(clamp(Number($('n-items').value)||8,1,300),clamp(Number($('n-experts').value)||5,1,50));}
+ showEditor();updateCheck();
+}
+function clearResult(){if(state.result){state.result=null;$('results').hidden=true;}}
+function setData(dataset,mode='manual'){
+ state.data={headers:dataset.headers.map(String),rows:dataset.rows.map(row=>row.map(x=>x??''))};
+ $('n-items').value=state.data.rows.length;$('n-experts').value=Math.max(1,state.data.headers.length-2);
+ clearResult();sourceMode(mode);showEditor();updateCheck();
+}
+function showEditor(){
+ const visible=Boolean(state.data)&&state.source==='manual';$('editor-section').hidden=!visible;
+ if(!visible)return;
+ const d=state.data;
+ $('manual-table').querySelector('thead').innerHTML='<tr><th>#</th>'+d.headers.map((h,i)=>i<2?`<th>${escapeHtml(i===0?'Item':'Item_Text')}</th>`:`<th><input class="expert-name" aria-label="Nama ahli ${i-1}" data-header="${i}" value="${escapeHtml(h)}"></th>`).join('')+'</tr>';
+ $('manual-table').querySelector('tbody').innerHTML=d.rows.map((row,i)=>`<tr><td class="row-label">${i+1}</td>${d.headers.map((h,j)=>`<td><input data-row="${i}" data-col="${j}" aria-label="Item ${i+1}, ${escapeHtml(h)}" class="${j===1?'meta-input':''}" value="${escapeHtml(row[j]??'')}"></td>`).join('')}</tr>`).join('');
+}
+function addItem(){if(!state.data)return;if(state.data.rows.length>=300){toast('Maksimal 300 item untuk editor manual.');return;}const d=state.data;d.rows.push([`I${d.rows.length+1}`,`Item ${d.rows.length+1}`,...Array(d.headers.length-2).fill('')]);clearResult();showEditor();updateCheck();}
+function addExpert(){if(!state.data)return;const d=state.data;if(d.headers.length>=52){toast('Maksimal 50 kolom ahli untuk editor manual.');return;}let n=1;while(d.headers.includes('Expert_'+n))n++;d.headers.push('Expert_'+n);d.rows.forEach(r=>r.push(''));$('n-experts').value=d.headers.length-2;clearResult();showEditor();updateCheck();}
+const issue=(type,item='',expert='',value='',message='')=>({Type:type,Item:String(item),Expert:String(expert),Value:String(value),Message:message});
+function inspectData(dataset,settings){
+ const errors=[],warnings=[],s=settings,d=dataset;
+ if(!d||!d.rows||!d.rows.length){errors.push(issue('Error','','','','Data kosong atau tidak dapat dibaca.'));return{valid:false,errors,warnings,nItems:0,nExperts:0,missing:0,clean:null};}
+ if(d.headers.length<3){errors.push(issue('Error','','','','Minimal diperlukan kolom Item, Item_Text, dan satu kolom Expert.'));return{valid:false,errors,warnings,nItems:d.rows.length,nExperts:0,missing:0,clean:null};}
+ if(![s.min,s.max].every(Number.isFinite)||s.max<=s.min)errors.push(issue('Error','','','','Skor maksimum harus lebih besar daripada skor minimum.'));
+ if(!Number.isFinite(s.cutoff)||s.cutoff<s.min||s.cutoff>s.max)errors.push(issue('Error','','','','Cutoff relevansi CVI harus berada di dalam rentang skor.'));
+ if(![s.min,s.max,s.cutoff].every(Number.isInteger))errors.push(issue('Error','','','','Skor minimum, maksimum, dan cutoff relevansi harus berupa bilangan bulat.'));
+ const experts=d.headers.slice(2).map(x=>String(x??''));
+ if(experts.some(x=>!x.trim()))errors.push(issue('Error','','','','Semua kolom ahli harus memiliki nama.'));
+ if(new Set(experts).size<experts.length)errors.push(issue('Error','','','','Nama kolom ahli harus unik.'));
+ const seen=new Set();let missing=0;
+ const clean=d.rows.map((row,i)=>{
+  const id=String(row[0]??'');if(!id.trim())errors.push(issue('Error',`Baris ${i+1}`,'','','ID Item kosong.'));
+  if(id.trim()&&seen.has(id))warnings.push(issue('Warning',id,'','','ID Item duplikat; pastikan ini memang disengaja.'));
+  seen.add(id);
+  const scores=experts.map((expert,j)=>{
+   const raw=row[j+2];const text=String(raw??'').trim();
+   if(!text){missing++;return null;}
+   const num=Number(text);
+   if(!Number.isFinite(num)){errors.push(issue('Error',id,expert,text,'Rating bukan angka.'));return NaN;}
+   if(num<s.min||num>s.max)errors.push(issue('Error',id,expert,text,`Rating di luar rentang ${s.min}–${s.max}.`));
+   if(!Number.isInteger(num))errors.push(issue('Error',id,expert,text,'Rating harus berupa kategori bilangan bulat.'));
+   return num;
+  });
+  const nMissing=scores.filter(x=>x===null).length, nObserved=scores.filter(x=>x!==null).length;
+  if(nObserved===0)errors.push(issue('Error',id,'','','Tidak ada rating ahli pada item ini.'));
+  else if(nMissing)warnings.push(issue('Warning',id,'','',`${nMissing} rating kosong; I-CVI/Aiken dihitung dari rating yang tersedia dan S-CVI/UA item ini tidak dihitung.`));
+  return{Item:id,Item_Text:String(row[1]??''),scores,missing:nMissing};
+ });
+ if(experts.length<3)warnings.push(issue('Warning','','','','Panel memiliki kurang dari 3 ahli. Indeks tetap dihitung, tetapi keputusan I-CVI tidak diberikan berdasarkan Polit, Beck, & Owen (2007).'));
+ return{valid:errors.length===0,errors,warnings,nItems:d.rows.length,nExperts:experts.length,missing,clean,expertNames:experts};
+}
+function updateCheck(){
+ const el=$('data-status');
+ if(!state.data){el.className='empty-card';el.innerHTML='<span class="empty-icon">▦</span><h2>Belum ada data</h2><p>Upload template Excel atau pilih Input manual, lalu klik <strong>Hitung validitas</strong>.</p>';return;}
+ const c=inspectData(state.data,currentSettings()),nE=c.errors.length,nW=c.warnings.length;
+ el.className='status-card '+(nE?'error':nW?'warning':'');
+ const shown=[...c.errors,...c.warnings].slice(0,8);
+ el.innerHTML=`<div class="status-head">${nE?'✕ Data belum siap dianalisis':nW?'⚠ Data siap dengan catatan':'✓ Data siap dianalisis'}</div><div class="status-meta">${c.nItems} item · ${c.nExperts} ahli · ${c.missing} missing rating · ${nE} error · ${nW} warning</div>${shown.length?'<ul class="issue-list">'+shown.map(e=>`<li><b>${escapeHtml(e.Type)}${e.Item?' — '+escapeHtml(e.Item):''}${e.Expert?' / '+escapeHtml(e.Expert):''}:</b> ${escapeHtml(e.Message)}${e.Value?' ['+escapeHtml(e.Value)+']':''}</li>`).join('')+'</ul>':''}${nE+nW>8?`<p class="issue-more">Menampilkan 8 dari ${nE+nW} catatan. Semua catatan akan disertakan pada ekspor.</p>`:''}`;
+}
+function choose(n,r){r=Math.min(r,n-r);let v=1;for(let i=1;i<=r;i++)v=v*(n-r+i)/i;return v;}
+function kappaEval(v){return v>.74?'Excellent':v>=.60?'Good':v>=.40?'Fair':'Di bawah Fair (< .40)';}
+const zByConf={'0.9':1.64485362695147,'0.95':1.959963984540054,'0.99':2.5758293035489004};
+function aikenCI(v,n,k,conf){const z=zByConf[String(conf)]??zByConf['0.95'];const inside=4*n*k*v*(1-v)+z*z;const lower=(2*n*k*v+z*z-z*Math.sqrt(inside))/(2*(n*k+z*z)),upper=(2*n*k*v+z*z+z*Math.sqrt(inside))/(2*(n*k+z*z));return[clamp(lower,0,1),clamp(upper,0,1)];}
+// Abramowitz-Stegun approximation (maximum absolute error in CDF ~ 1e-7).
+function normalCdf(z){const t=1/(1+0.2316419*Math.abs(z));const phi=Math.exp(-z*z/2)/Math.sqrt(2*Math.PI);const Q=phi*t*(0.319381530+t*(-0.356563782+t*(1.781477937+t*(-1.821255978+t*1.330274429))));return z>=0?1-Q:Q;}
+const distributionCache=new Map();
+function aikenP(S,n,k){
+ if(n>25){const mu=n*k/2,sigma=Math.sqrt(n*k*(k+2)/12),z=(S-0.5-mu)/sigma;return{p:clamp(1-normalCdf(z),0,1),method:'Normal approximation (n > 25)'};}
+ const key=n+':'+k;let prob=distributionCache.get(key);
+ if(!prob){prob=[1];for(let i=0;i<n;i++){const next=Array(prob.length+k).fill(0);for(let a=0;a<prob.length;a++)for(let b=0;b<=k;b++)next[a+b]+=prob[a]/(k+1);prob=next;}distributionCache.set(key,prob);}
+ let p=0;for(let i=S;i<prob.length;i++)p+=prob[i];return{p:clamp(p,0,1),method:'Exact right-tail'};
+}
+function evaluateData(dataset,s){
+ const check=inspectData(dataset,s);if(!check.valid)throw new Error(check.errors.slice(0,3).map(e=>e.Message).join(' ')+(check.errors.length>3?` (${check.errors.length-3} error lain)` :''));
+ const classical=s.min===1&&s.max===4&&s.cutoff===3;
+ const item=check.clean.map((r)=>{
+  const x=r.scores.filter(v=>v!==null),n=x.length,agree=x.filter(v=>v>=s.cutoff).length,iCvi=agree/n;
+  const pc=choose(n,agree)*Math.pow(.5,n),kappa=Math.abs(1-pc)<1e-12?null:(iCvi-pc)/(1-pc);
+  const S=x.reduce((sum,v)=>sum+v-s.min,0),v=S/(n*(s.max-s.min)),ci=aikenCI(v,n,s.max-s.min,s.conf),p=aikenP(S,n,s.max-s.min);
+  return{
+   Item:r.Item,Item_Text:r.Item_Text,N_Experts:n,Missing_Ratings:check.nExperts-n,Mean_Rating:mean(x),Agree_n:agree,I_CVI:iCvi,Pc_Chance:pc,
+   Modified_Kappa:kappa,Kappa_Evaluation:n<3?'Belum dievaluasi (< 3 ahli)':kappaEval(kappa),CVI_Status:n<3?'Belum dievaluasi (< 3 ahli)':iCvi>=.78?'Memenuhi I-CVI':'Perlu review',
+   Universal_Agreement:n===check.nExperts?agree===n:null,Aiken_V:v,Aiken_CI_Lower:ci[0],Aiken_CI_Upper:ci[1],Aiken_p:p.p,Aiken_p_Method:p.method,
+   Aiken_p_Note:p.p<s.alpha?`p < ${s.alpha.toFixed(2)}`:`p >= ${s.alpha.toFixed(2)}`,
+   CVI_Criterion:'I-CVI >= .78 dengan >= 3 ahli',CVI_Reference:'Polit, Beck, & Owen (2007)',
+   Kappa_Reference:'Polit, Beck, & Owen (2007); evaluation categories draw on Cicchetti & Sparrow (1981) and Fleiss (1981)',
+   Aiken_Reference:'Aiken (1985); CI: Penfield & Giacobbi (2004). No universal V/lower-CI cutoff applied.'
+  };
+ });
+ const cv=item.map(i=>i.I_CVI),ua=item.map(i=>i.Universal_Agreement).filter(v=>v!==null),vs=item.map(i=>i.Aiken_V);
+ const ave=mean(cv),uaVal=ua.length?ua.filter(Boolean).length/ua.length:null,vMean=mean(vs),vMin=Math.min(...vs),vMax=Math.max(...vs);
+ const cviPass=item.filter(i=>i.CVI_Status==='Memenuhi I-CVI').length,cviEvaluable=item.filter(i=>i.CVI_Status!=='Belum dievaluasi (< 3 ahli)').length;
+ const kappaExcellent=item.filter(i=>i.Kappa_Evaluation==='Excellent').length,pLow=item.filter(i=>i.Aiken_p<s.alpha).length;
+ const scale=[
+  {Metric:'S-CVI/Ave (utama)',Value:ave,Criterion:'>= 0.90',Decision:ave>=.90?'Memenuhi kriteria':'Belum memenuhi',Reference_or_Note:'Polit & Beck (2006) membahas .90 sebagai standar average congruity (mengacu Waltz et al., 2005).'},
+  {Metric:'S-CVI/UA (tambahan)',Value:uaVal,Criterion:'>= 0.80 (kriteria tambahan)',Decision:uaVal===null?'Tidak dapat dihitung':uaVal>=.80?'Memenuhi kriteria tambahan':'Belum memenuhi kriteria tambahan',Reference_or_Note:`Polit & Beck (2006) membahas .80 sebagai standar tradisional/masuk akal untuk S-CVI/UA. Dihitung hanya dari ${ua.length} item dengan rating lengkap.`},
+  {Metric:"Mean Aiken's V antar-item",Value:vMean,Criterion:'Tidak ada cutoff universal yang diterapkan',Decision:'Deskriptif saja',Reference_or_Note:'Rerata deskriptif V item; bukan cutoff atau indeks scale-level universal dari Aiken (1985).'},
+  {Metric:"Minimum Aiken's V item",Value:vMin,Criterion:'Deskriptif',Decision:'Deskriptif saja',Reference_or_Note:'Ringkasan deskriptif V item.'},
+  {Metric:"Maximum Aiken's V item",Value:vMax,Criterion:'Deskriptif',Decision:'Deskriptif saja',Reference_or_Note:'Ringkasan deskriptif V item.'}
+ ];
+ const basis=classical?'Rating 3–4 pada skala relevansi 1–4 dikategorikan relevan (Polit, Beck, & Owen, 2007).':`Rating ≥ ${s.cutoff} dikategorikan relevan berdasarkan pengaturan pengguna, bukan cutoff rating CVI klasik Polit, Beck, & Owen (2007).`;
+ const interpretation=`S-CVI/Ave = ${fmt(ave)} (${ave>=.90?'memenuhi kriteria':'belum memenuhi kriteria'} ≥ 0.90; Polit & Beck, 2006). ${cviPass} dari ${cviEvaluable} item yang dapat dievaluasi memenuhi I-CVI ≥ 0.78 (Polit, Beck, & Owen, 2007). ${kappaExcellent} item memiliki modified kappa kategori Excellent (> 0.74). ${basis} Aiken’s V dilaporkan sebagai point estimate beserta ${Math.round(s.conf*100)}% confidence interval; tidak ada cutoff V atau lower CI universal yang digunakan. ${pLow} dari ${item.length} item mempunyai right-tail p-value < ${s.alpha.toFixed(2)} sebagai informasi inferensial pendukung, bukan penentu validitas. ${check.missing?`Terdapat ${check.missing} rating kosong sehingga denominator per item dapat berbeda. `:''}Kriteria ini menunjukkan kecukupan bukti kuantitatif validitas isi menurut aturan yang dinyatakan, bukan validitas instrumen secara keseluruhan.`;
+ const criteria=[
+ ['Kategorisasi relevansi untuk CVI',classical?'Rating 3–4 pada skala 1–4 = relevan':`Rating >= ${s.cutoff} = relevan`,classical?'Polit, Beck, & Owen (2007)':'Pengaturan pengguna; bukan cutoff rating referensi CVI klasik'],
+ ['I-CVI','I-CVI >= .78; minimal 3 ahli untuk keputusan app','Polit, Beck, & Owen (2007)'],
+ ['Modified kappa (k*)','Pc = C(N,A) x .5^N; k* = (I-CVI - Pc)/(1 - Pc)','Polit, Beck, & Owen (2007)'],
+ ['Kategori modified kappa','Fair .40–.59; Good .60–.74; Excellent > .74; < .40 di bawah Fair','Polit, Beck, & Owen (2007), guideline Cicchetti & Sparrow (1981) dan Fleiss (1981)'],
+ ['S-CVI/Ave','S-CVI/Ave >= .90 (hasil skala utama)','Polit & Beck (2006), mengacu Waltz et al. (2005)'],
+ ['S-CVI/UA','S-CVI/UA >= .80 sebagai indeks tambahan, hanya rating lengkap','Polit & Beck (2006); sensitif terhadap jumlah ahli'],
+ ["Aiken's V point estimate",'Tidak memakai cutoff V universal','Aiken (1985) tidak menetapkan satu cutoff V untuk semua desain'],
+ ["Aiken's V confidence interval",'Score method; tidak memakai lower-bound cutoff universal','Penfield & Giacobbi (2004)'],
+ ['Aiken right-tail probability','p < alpha sebagai informasi inferensial tambahan','Aiken (1985)'],
+ ['Alpha untuk p-value Aiken',`alpha = ${s.alpha.toFixed(2)}`,'Pilihan pengguna / konvensi inferensial; bukan cutoff validitas universal'],
+ ["Ringkasan Aiken's V level skala",'Mean/rentang V antar-item; bukan keputusan validitas skala','Ringkasan deskriptif aplikasi']
+ ].map(x=>({Component:x[0],Criterion_or_Use:x[1],Reference_or_Status:x[2]}));
+ const report=buildReports({s,check,item,scale,ave,uaVal,vMean,vMin,vMax,cviPass,cviEvaluable,kappaExcellent,pLow,classical,basis,interpretation});
+ return{item,scale,check,criteria,interpretation,report,stats:{ave,uaVal,vMean,vMin,vMax,cviPass,cviEvaluable,kappaExcellent,pLow,nItems:item.length,nExperts:check.nExperts}};
+}
+function buildReports({s,check,item,ave,uaVal,vMean,vMin,vMax,cviPass,cviEvaluable,kappaExcellent,pLow,classical,interpretation}){
+ const conf=Math.round(s.conf*100),alpha=s.alpha.toFixed(2);
+ const methodID=`Validitas isi dievaluasi menggunakan rating relevansi dari panel ahli pada skala ordinal ${s.min} sampai ${s.max}. ${classical?'Rating 3 dan 4 dikategorikan relevan untuk Content Validity Index (CVI), mengikuti Polit, Beck, dan Owen (2007).':`Rating ${s.cutoff} atau lebih dikategorikan relevan berdasarkan ambang yang ditentukan pengguna.`} Item-level CVI (I-CVI) dihitung sebagai proporsi ahli yang menilai item relevan. Nilai I-CVI ≥ 0,78 dengan sedikitnya tiga ahli dianggap memenuhi kriteria Polit, Beck, dan Owen (2007). Scale-level CVI dengan pendekatan rata-rata (S-CVI/Ave) dihitung sebagai rerata I-CVI antar-item; 0,90 digunakan sebagai kriteria utama mengikuti Polit dan Beck (2006). S-CVI/UA dilaporkan sebagai indeks universal agreement tambahan. Modified kappa (k*) dihitung menggunakan Pc = C(N,A) × 0,5^N dan k* = (I-CVI − Pc)/(1 − Pc). Aiken’s V dihitung untuk setiap item disertai ${conf}% confidence interval menggunakan score method Penfield dan Giacobbi (2004). Tidak ada cutoff universal V maupun lower CI. Right-tail probability Aiken (1985) dilaporkan sebagai informasi inferensial tambahan dengan alpha ${alpha}.`;
+ const resultID=`Analisis validitas isi mencakup ${item.length} item yang dinilai oleh maksimum ${check.nExperts} ahli. ${check.missing?`Terdapat ${check.missing} rating ahli yang kosong.`:'Tidak terdapat rating ahli yang kosong.'} Nilai S-CVI/Ave sebesar ${fmt(ave)}, ${ave>=.90?'memenuhi':'belum memenuhi'} kriteria 0,90. ${cviPass} dari ${cviEvaluable} item yang dapat dievaluasi memenuhi kriteria I-CVI 0,78. Modified kappa berada pada kategori Excellent untuk ${kappaExcellent} item. ${uaVal!==null?`Nilai S-CVI/UA adalah ${fmt(uaVal)}.`:'S-CVI/UA tidak dapat diringkas karena tidak ada item dengan rating lengkap.'} Nilai Aiken’s V antar-item berkisar dari ${fmt(vMin)} hingga ${fmt(vMax)} (rerata = ${fmt(vMean)}). ${pLow} dari ${item.length} item memiliki right-tail p-value di bawah ${alpha}; probabilitas ini bukan cutoff validitas universal.`;
+ const methodEN=`Content validity was evaluated using expert relevance ratings on an ordered scale from ${s.min} to ${s.max}. ${classical?'Ratings of 3 and 4 were classified as relevant for the Content Validity Index (CVI), following Polit, Beck, and Owen (2007).':`Ratings of ${s.cutoff} or higher were classified as relevant using a user-specified threshold.`} Item-level CVI (I-CVI) was calculated as the proportion of experts rating each item as relevant; values ≥ .78 based on at least three experts were treated as meeting the criterion described by Polit, Beck, and Owen (2007). Scale-level CVI (S-CVI/Ave) was calculated as the mean I-CVI across items, using .90 as the primary criterion (Polit & Beck, 2006), while S-CVI/UA was reported as a supplementary universal-agreement index. Chance-corrected agreement was summarized using modified kappa (k*), with Pc = C(N,A) × .5^N and k* = (I-CVI − Pc)/(1 − Pc). Aiken's V was calculated for each item, together with ${conf}% score confidence intervals following Penfield and Giacobbi (2004). No universal V or lower-CI cutoff was imposed. Right-tail probabilities based on Aiken (1985) were reported as supplementary information using alpha = ${alpha}.`;
+ const resultEN=`Content validity analysis included ${item.length} items rated by up to ${check.nExperts} experts. ${check.missing?`There were ${check.missing} missing expert ratings.`:'No expert ratings were missing.'} The S-CVI/Ave was ${fmt(ave)}, ${ave>=.90?'meeting':'not meeting'} the .90 criterion. ${cviPass} of ${cviEvaluable} evaluable items met the I-CVI criterion of .78. Modified kappa was classified as Excellent for ${kappaExcellent} items. ${uaVal!==null?`The supplementary S-CVI/UA was ${fmt(uaVal)}.`:'S-CVI/UA could not be summarized because no item had complete ratings.'} Across items, Aiken's V ranged from ${fmt(vMin)} to ${fmt(vMax)} (mean = ${fmt(vMean)}). ${pLow} of ${item.length} items had right-tail p-values below ${alpha}; these were treated as supplementary rather than a universal validity threshold.`;
+ return{id:{methods:methodID,results:resultID},en:{methods:methodEN,results:resultEN},interpretation};
+}
+const statusBadge=(v,type='status')=>{
+ let color='amber';if(type==='kappa')color=v==='Excellent'?'green':v==='Good'?'blue':v==='Fair'?'amber':'red';
+ else color=v==='Memenuhi I-CVI'?'green':v==='Perlu review'?'red':'amber';
+ return `<span class="status-pill ${color}">${escapeHtml(v)}</span>`;
+};
+function drawTable(id,headers,rows,formats={},wrapCols=[]){
+ const el=$(id);
+ el.innerHTML='<thead><tr>'+headers.map(h=>`<th>${escapeHtml(h)}</th>`).join('')+'</tr></thead><tbody>'+(rows.length?rows.map(row=>'<tr>'+row.map((v,i)=>`<td class="${wrapCols.includes(i)?'wrap-text':''}">${formats[i]?formats[i](v):escapeHtml(v??'—')}</td>`).join('')+'</tr>').join(''):`<tr><td colspan="${headers.length}" style="color:#718796">Tidak ada data.</td></tr>` )+'</tbody>';
+}
+function renderResult(){
+ const r=state.result;if(!r)return;
+ $('results').hidden=false;
+ const s=r.stats;
+ $('metrics').innerHTML=[
+  ['S-CVI/Ave',fmt(s.ave),s.ave>=.90?'Memenuhi kriteria':'Belum memenuhi'],
+  ['S-CVI/UA',fmt(s.uaVal),'Indeks tambahan'],
+  ["Mean Aiken's V",fmt(s.vMean),'Rerata antar-item'],
+  ['Item memenuhi I-CVI',`${s.cviPass}/${s.cviEvaluable}`,`${s.nExperts} ahli dalam panel`]
+ ].map(([name,val,sub])=>`<div class="metric"><div class="metric-label">${escapeHtml(name)}</div><div class="metric-value">${escapeHtml(val)}</div><div class="metric-sub">${escapeHtml(sub)}</div></div>`).join('');
+ drawTable('scale-table',['Indeks','Nilai','Kriteria','Keputusan'],r.scale.slice(0,3).map(v=>[v.Metric,fmt(v.Value),v.Criterion,v.Decision]),{},[0,2,3]);
+ $('scale-notes').textContent=`S-CVI/Ave ≥ .90 mengacu Polit & Beck (2006). S-CVI/UA merupakan indeks tambahan dan hanya mencakup ${r.item.filter(x=>x.Universal_Agreement!==null).length} item dengan rating lengkap. Rentang Aiken’s V: ${fmt(s.vMin)}–${fmt(s.vMax)}; rerata/rentang bersifat deskriptif.`;
+ drawItemTable();
+ drawTable('advanced-table',['Item','Missing','Pc','Universal agreement','Metode Aiken p'],r.item.map(i=>[i.Item,i.Missing_Ratings,fmt(i.Pc_Chance),i.Universal_Agreement===null?'Tidak dievaluasi':i.Universal_Agreement?'Ya':'Tidak',i.Aiken_p_Method]),{},[4]);
+ $('interpretation').textContent=r.interpretation;
+ drawTable('criteria-table',['Komponen','Kriteria / penggunaan','Referensi / keterangan'],r.criteria.map(i=>[i.Component,i.Criterion_or_Use,i.Reference_or_Status]),{},[0,1,2]);
+ updateReports();
+}
+function drawItemTable(){
+ if(!state.result)return;
+ const all=state.result.item;
+ const filtered=all.filter(i=>(i.Item+' '+i.Item_Text+' '+i.CVI_Status+' '+i.Kappa_Evaluation).toLowerCase().includes(state.search.toLowerCase()));
+ const lastPage=Math.max(0,Math.ceil(filtered.length/state.pageSize)-1);state.page=clamp(state.page,0,lastPage);
+ const pageRows=filtered.slice(state.page*state.pageSize,(state.page+1)*state.pageSize);
+ drawTable('item-table',['Item','Teks item','N','Rerata','Setuju','I-CVI','k*','Kategori k*','Aiken V',`${Math.round(currentSettings().conf*100)}% CI`,'Aiken p','Status I-CVI'],pageRows.map(i=>[i.Item,i.Item_Text,i.N_Experts,fmt(i.Mean_Rating,2),`${i.Agree_n}/${i.N_Experts}`,fmt(i.I_CVI),fmt(i.Modified_Kappa),i.Kappa_Evaluation,fmt(i.Aiken_V),`[${fmt(i.Aiken_CI_Lower)}, ${fmt(i.Aiken_CI_Upper)}]`,fmtP(i.Aiken_p),i.CVI_Status]),{7:v=>statusBadge(v,'kappa'),11:v=>statusBadge(v,'status')},[1]);
+ const from=filtered.length?state.page*state.pageSize+1:0,to=Math.min((state.page+1)*state.pageSize,filtered.length);
+ $('pagination').innerHTML=`<span>Menampilkan ${from}–${to} dari ${filtered.length} item</span><div class="page-btns"><button type="button" id="prev-page" ${state.page===0?'disabled':''} aria-label="Halaman sebelumnya">‹ Sebelumnya</button><span>${state.page+1} / ${lastPage+1}</span><button type="button" id="next-page" ${state.page>=lastPage?'disabled':''} aria-label="Halaman berikutnya">Berikutnya ›</button></div>`;
+ $('prev-page').addEventListener('click',()=>{state.page--;drawItemTable();});$('next-page').addEventListener('click',()=>{state.page++;drawItemTable();});
+}
+function updateReports(){if(!state.result)return;const lang=$('report-language').value;const r=state.result.report[lang];$('methods-text').value=r.methods;$('results-text').value=r.results;$('methods-label').textContent=lang==='id'?'Metode (Bahasa Indonesia)':'Methods (English)';$('results-label').textContent=lang==='id'?'Hasil (Bahasa Indonesia)':'Results (English)';}
+function runAnalysis(){
+ if(!state.data){toast('Masukkan data terlebih dahulu.');return;}
+ try{state.result=evaluateData(state.data,currentSettings());state.search='';state.page=0;$('item-search').value='';renderResult();toast('Analisis selesai. Hasil siap dibaca dan diekspor.');
+   const el=$('results');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+ }catch(err){clearResult();updateCheck();toast('Periksa data: '+err.message);}
+}
+function parseCSV(content,delimiter){
+ content=content.replace(/^\uFEFF/,'');
+ if(!delimiter){const head=content.split(/\r?\n/,1)[0];delimiter=head.includes('\t')?'\t':head.includes(';')&&!head.includes(',')?';':',';}
+ let rows=[],row=[],field='',quoted=false;
+ for(let i=0;i<content.length;i++){
+  const c=content[i];if(quoted){if(c==='"'&&content[i+1]==='"'){field+='"';i++;}else if(c==='"')quoted=false;else field+=c;}
+  else if(c==='"')quoted=true;
+  else if(c===delimiter){row.push(field);field='';}
+  else if(c==='\n'||c==='\r'){if(c==='\r'&&content[i+1]==='\n')i++;row.push(field);field='';if(row.some(v=>v.trim()!==''))rows.push(row);row=[];}
+  else field+=c;
+ }
+ if(quoted)throw new Error('Tanda kutip pada CSV tidak tertutup.');
+ row.push(field);if(row.some(v=>v.trim()!==''))rows.push(row);
+ if(!rows.length)throw new Error('File CSV kosong.');
+ return{headers:rows[0],rows:rows.slice(1).map(row=>Array.from({length:rows[0].length},(_,i)=>row[i]??''))};
+}
+async function importFile(file){
+ if(!file)return;
+ const ext=file.name.split('.').pop().toLowerCase();
+ if(ext==='xls')throw new Error('Format .xls lama tidak didukung di GitHub Pages. Buka di Excel, pilih Save As .xlsx, lalu unggah kembali.');
+ let d;
+ if(ext==='xlsx'){d=await XLSXLite.readXlsx(file);}
+ else if(['csv','tsv'].includes(ext))d=parseCSV(await file.text(),ext==='tsv'?'\t':undefined);
+ else throw new Error('Gunakan file Excel .xlsx, CSV, atau TSV.');
+ if(d.headers.length<3)throw new Error('File harus memuat kolom Item, Item_Text, dan minimal satu kolom ahli.');
+ if(!d.rows.length)throw new Error('Tidak ada baris data pada file.');
+ if(d.rows.length>5000||d.headers.length>202)throw new Error('Maksimal 5.000 item dan 200 kolom ahli saat impor file.');
+ setData(d,'upload');$('file-name').textContent=`✓ ${file.name} · ${d.rows.length} item · ${d.headers.length-2} ahli`;
+ toast('Data berhasil dibaca. Klik Hitung validitas untuk menganalisis.');
+}
+function downloadBlob(blob,filename){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),15000);}
+const objSheet=(name,arr)=>({name,headers:Object.keys(arr[0]||{}),rows:arr.map(x=>Object.values(x))});
+function resultSheets(){
+ const r=state.result;if(!r)throw new Error('Hitung validitas terlebih dahulu.');
+ const exportIssues=[...r.check.errors,...r.check.warnings];if(!exportIssues.length)exportIssues.push(issue('OK','','','','Tidak ada error atau warning data.'));
+ const pub=r.item.map(i=>({Item:i.Item,Item_Text:i.Item_Text,N:i.N_Experts,Mean_Rating:i.Mean_Rating,Agree:`${i.Agree_n}/${i.N_Experts}`,I_CVI:i.I_CVI,Modified_Kappa:i.Modified_Kappa,Kappa_Evaluation:i.Kappa_Evaluation,Aiken_V:i.Aiken_V,CI_Lower:i.Aiken_CI_Lower,CI_Upper:i.Aiken_CI_Upper,Status_I_CVI:i.CVI_Status}));
+ const report=[['Metode (Bahasa Indonesia)',r.report.id.methods],['Hasil (Bahasa Indonesia)',r.report.id.results],['Methods (English)',r.report.en.methods],['Results (English)',r.report.en.results],['Interpretasi berbasis aturan',r.interpretation]].map(([Section,Text])=>({Section,Text}));
+ return [objSheet('Hasil_Item',r.item),objSheet('Ringkasan_Skala',r.scale),objSheet('Tabel_Publikasi',pub),objSheet('Draft_Laporan',report),objSheet('Data_Check',exportIssues),objSheet('Kriteria_Dasar',r.criteria),{name:'Data_Input',headers:state.data.headers,rows:state.data.rows},objSheet('Referensi',refData.map(([Reference,URL])=>({Reference,URL})))];
+}
+function csvCell(v){
+ let s=String(v??'');
+ if(/^[=+@]/.test(s)||(/^-/).test(s)&&!(/^-\d+(\.\d+)?$/.test(s)))s="'"+s;
+ return /[",\r\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;
+}
+function downloadResults(type){
+ if(!state.result){toast('Hitung validitas terlebih dahulu.');return;}
+ try{
+  const today=new Date().toLocaleDateString('sv-SE'),name='hasil_content_validity_'+today;
+  if(type==='xlsx'){downloadBlob(XLSXLite.writeXlsx(resultSheets()),name+'.xlsx');toast('File Excel hasil analisis berhasil dibuat.');}
+  else{const s=resultSheets()[2];const csv='\uFEFF'+[s.headers,...s.rows].map(row=>row.map(csvCell).join(',')).join('\r\n');downloadBlob(new Blob([csv],{type:'text/csv;charset=utf-8'}),name+'_publikasi.csv');toast('CSV tabel publikasi berhasil dibuat.');}
+ }catch(err){toast('Gagal ekspor: '+err.message);}
+}
+function activateTab(tab){
+ document.querySelectorAll('.tab-page').forEach(el=>el.hidden=el.id!=='tab-'+tab);
+ document.querySelectorAll('[data-tab]').forEach(el=>{const active=el.dataset.tab===tab;el.classList.toggle('active',active);el.setAttribute('aria-current',active?'page':'false');});
+ if(location.hash!=='#'+tab)history.replaceState(null,'','#'+tab);
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function setup(){
+ $('reference-list').innerHTML=refData.map(([txt,url])=>`<li>${escapeHtml(txt)}<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a></li>`).join('');
+ document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>activateTab(b.dataset.tab)));
+ $('source-upload').addEventListener('click',()=>sourceMode('upload'));
+ $('source-manual').addEventListener('click',()=>sourceMode('manual'));
+ $('load-example').addEventListener('click',()=>{setData(example(),'manual');toast('Data contoh dimuat. Klik Hitung validitas untuk melihat hasil.');});
+ $('build-manual').addEventListener('click',()=>{
+  const n=Number($('n-items').value),m=Number($('n-experts').value);
+  if(!Number.isInteger(n)||n<1||n>300||!Number.isInteger(m)||m<1||m>50){toast('Jumlah item 1–300 dan ahli 1–50.');return;}
+  setData(blankData(n,m),'manual');toast(`Tabel ${n} item × ${m} ahli siap diisi.`);
+ });
+ $('add-item').addEventListener('click',addItem);$('add-expert').addEventListener('click',addExpert);
+ $('manual-table').addEventListener('input',e=>{
+  const {row,col,header}=e.target.dataset;
+  if(row!==undefined&&col!==undefined)state.data.rows[Number(row)][Number(col)]=e.target.value;
+  else if(header!==undefined)state.data.headers[Number(header)]=e.target.value;
+  else return;
+  clearResult();updateCheck();
+ });
+ ['min-score','max-score','cvi-cutoff','conf','alpha'].forEach(id=>$(id).addEventListener('change',()=>{clearResult();updateCheck();}));
+ $('analyze').addEventListener('click',runAnalysis);
+ $('item-search').addEventListener('input',e=>{state.search=e.target.value;state.page=0;drawItemTable();});
+ $('page-size').addEventListener('change',e=>{state.pageSize=Number(e.target.value);state.page=0;drawItemTable();});
+ $('report-language').addEventListener('change',updateReports);
+ document.querySelectorAll('[data-copy]').forEach(btn=>btn.addEventListener('click',async()=>{
+  const id=btn.dataset.copy,el=$(id);try{await navigator.clipboard.writeText(el.value);toast('Teks disalin ke clipboard.');}
+  catch(_){el.focus();el.select();try{document.execCommand('copy');toast('Teks disalin ke clipboard.');}catch(__){toast('Silakan salin teks secara manual.');}}
+ }));
+ $('download-results').addEventListener('click',()=>downloadResults('xlsx'));
+ $('download-csv').addEventListener('click',()=>downloadResults('csv'));
+ $('file-input').addEventListener('change',async e=>{try{await importFile(e.target.files[0]);}catch(err){toast(err.message);$('file-name').textContent='✕ '+err.message;}e.target.value='';});
+ const drop=$('drop-zone');
+ ['dragenter','dragover'].forEach(type=>drop.addEventListener(type,e=>{e.preventDefault();drop.classList.add('drag-over');}));
+ ['dragleave','drop'].forEach(type=>drop.addEventListener(type,e=>{e.preventDefault();drop.classList.remove('drag-over');}));
+ drop.addEventListener('drop',async e=>{const f=e.dataTransfer?.files?.[0];if(f){try{await importFile(f);}catch(err){toast(err.message);}}});
+ activateTab(['analisis','petunjuk','referensi'].includes(location.hash.slice(1))?location.hash.slice(1):'analisis');
+ updateCheck();
+}
+window.ContentValidityApp={inspectData,evaluateData,parseCSV,example,blankData};
+window.addEventListener('DOMContentLoaded',setup);
+})();
+
+</script>
+<script>
+(function(){
+ window.addEventListener('DOMContentLoaded', function(){
+  const button=document.getElementById('download-template');
+  button.addEventListener('click',function(){
+   const d=window.ContentValidityApp.example();
+   const notes=[
+    ['Struktur','Satu baris = satu item; satu kolom Expert = satu ahli/validator.'],
+    ['Kolom Item','ID item, misalnya I1, I2, I3. Jangan kosongkan.'],
+    ['Kolom Item_Text','Teks item/pernyataan; boleh dikosongkan.'],
+    ['Kolom Expert','Rating numerik per ahli. Semua kolom setelah Item_Text dianggap sebagai rating ahli.'],
+    ['Skala default','Rating 1–4; 3 dan 4 dikategorikan relevan pada default CVI.'],
+    ['Missing value','Sel kosong diperbolehkan, tetapi aplikasi memberi warning.'],
+    ['Aiken V','Confidence interval mengikuti Penfield & Giacobbi (2004). Tanpa cutoff V/CI universal.']
+   ];
+   const refs=[
+    ['Aiken (1985)','https://doi.org/10.1177/0013164485451012'],
+    ['Polit & Beck (2006)','https://doi.org/10.1002/nur.20147'],
+    ['Polit, Beck, & Owen (2007)','https://doi.org/10.1002/nur.20199'],
+    ['Penfield & Giacobbi (2004)','https://doi.org/10.1207/s15327841mpee0804_3']
+   ];
+   const blob=XLSXLite.writeXlsx([{name:'Data',headers:d.headers,rows:d.rows},{name:'Petunjuk',headers:['Bagian','Petunjuk'],rows:notes},{name:'Referensi',headers:['Referensi','URL'],rows:refs}]);
+   const a=document.createElement('a'),url=URL.createObjectURL(blob);
+   a.href=url;a.download='template_content_validity.xlsx';document.body.appendChild(a);a.click();a.remove();
+   setTimeout(()=>URL.revokeObjectURL(url),15000);
+  });
+ });
+})();
+</script>
+</body>
+</html>
